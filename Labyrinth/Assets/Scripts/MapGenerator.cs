@@ -10,13 +10,22 @@ public class MapGenerator : MonoBehaviour {
 
 	int height;
 	int width;
-	const int defaultHeight = 10;
-	const int defaultWidth = 10;
+	const int defaultHeight = 4;
+	const int defaultWidth = 4;
 	public int startingX; // I consider that the X coordinate represents height and they Y coordinate represents width
 	public int startingY;
 
 	public enum cellType {wall, clear};
 	public List < List <cellType> > map = new List < List <cellType> > (); //the map is going to be represented as a matrix of bools
+
+	class pair {
+		public pair (int a, int b) {
+			first = a;
+			second = b;
+		}
+		public int first { get; set; }
+		public int second { get; set; }
+	}
 
 	void initialize () {
 
@@ -33,9 +42,9 @@ public class MapGenerator : MonoBehaviour {
 			startingY = (int) Random.Range (1, width + almostOne);
 		}
 
-		for (int i = 0; i <= height; i++) {
+		for (int i = 0; i <= height + 1; i++) {
 			map.Add (new List <cellType> ());
-			for (int j = 0; j <= width; j++) {
+			for (int j = 0; j <= width + 1; j++) {
 				map [i].Add (cellType.wall);
 			}
 		}
@@ -43,7 +52,57 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void generateTree () {
-		
+		/*	
+		       before adding a point to the tree, I make sure that:
+		    1) it is still in the matrix' range 
+			2) no more than 1 of its neighbors have been added; 
+		*/
+		List <pair> pointsToBeChecked = new List <pair> ();
+		int currentPointIndex;
+		int currentNeighbors;
+
+		pointsToBeChecked.Add (new pair (startingX, startingY));
+		while (pointsToBeChecked.Count != 0) {
+			currentPointIndex = (int) Random.Range (0, (pointsToBeChecked.Count - 1) + almostOne);
+			currentNeighbors = 0;
+
+			if (pointsToBeChecked [currentPointIndex].first == 0 ||
+			    pointsToBeChecked [currentPointIndex].second == 0 ||
+			    pointsToBeChecked [currentPointIndex].first > height ||
+			    pointsToBeChecked [currentPointIndex].second > width) {
+				pointsToBeChecked.RemoveAt (currentPointIndex);
+				continue;
+			}
+
+			if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == cellType.clear) {
+				currentNeighbors++;
+			}
+			if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == cellType.clear) {
+				currentNeighbors++;
+			}
+			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == cellType.clear) {
+				currentNeighbors++;
+			}
+			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == cellType.clear) {
+				currentNeighbors++;
+			}
+			if (currentNeighbors <= 1) {
+				map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second] = cellType.clear;
+				if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == cellType.wall) {
+					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first - 1, pointsToBeChecked [currentPointIndex].second));
+				}
+				if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == cellType.wall) {
+					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first + 1, pointsToBeChecked [currentPointIndex].second));				
+				}
+				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == cellType.wall) {
+					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second - 1));
+				}
+				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == cellType.wall) {
+					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second + 1));
+				}
+			}
+			pointsToBeChecked.RemoveAt (currentPointIndex);
+		}
 	}
 
 	void startGenerating () {
@@ -52,7 +111,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void Awake () {
-		
+		startGenerating ();
 	}
 
 	void Start () {
