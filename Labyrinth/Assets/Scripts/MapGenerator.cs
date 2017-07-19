@@ -15,8 +15,9 @@ public class MapGenerator : MonoBehaviour {
 	public int startingX; // I consider that the X coordinate represents height and they Y coordinate represents width
 	public int startingY;
 
-	public enum cellType {wall, clear};
-	public List < List <cellType> > map = new List < List <cellType> > (); //the map is going to be represented as a matrix of bools
+	public List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > (); 
+
+	PrefabInstantiator localPrefabInstantiator;
 
 	class pair {
 		public pair (int a, int b) {
@@ -43,12 +44,12 @@ public class MapGenerator : MonoBehaviour {
 		}
 
 		for (int i = 0; i <= height + 1; i++) {
-			map.Add (new List <cellType> ());
+			map.Add (new List <SharedDataTypes.cellType> ());
 			for (int j = 0; j <= width + 1; j++) {
-				map [i].Add (cellType.wall);
+				map [i].Add (SharedDataTypes.cellType.wall);
 			}
 		}
-		map [startingX] [startingY] = cellType.clear;
+		map [startingX] [startingY] = SharedDataTypes.cellType.clear;
 	}
 
 	void generateTree () {
@@ -74,30 +75,30 @@ public class MapGenerator : MonoBehaviour {
 				continue;
 			}
 
-			if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == cellType.clear) {
+			if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.clear) {
 				currentNeighbors++;
 			}
-			if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == cellType.clear) {
+			if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.clear) {
 				currentNeighbors++;
 			}
-			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == cellType.clear) {
+			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == SharedDataTypes.cellType.clear) {
 				currentNeighbors++;
 			}
-			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == cellType.clear) {
+			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == SharedDataTypes.cellType.clear) {
 				currentNeighbors++;
 			}
 			if (currentNeighbors <= 1) {
-				map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second] = cellType.clear;
-				if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == cellType.wall) {
+				map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second] = SharedDataTypes.cellType.clear;
+				if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.wall) {
 					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first - 1, pointsToBeChecked [currentPointIndex].second));
 				}
-				if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == cellType.wall) {
+				if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.wall) {
 					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first + 1, pointsToBeChecked [currentPointIndex].second));				
 				}
-				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == cellType.wall) {
+				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == SharedDataTypes.cellType.wall) {
 					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second - 1));
 				}
-				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == cellType.wall) {
+				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == SharedDataTypes.cellType.wall) {
 					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second + 1));
 				}
 			}
@@ -112,10 +113,13 @@ public class MapGenerator : MonoBehaviour {
 
 	void Awake () {
 		startGenerating ();
+		localPrefabInstantiator = this.gameObject.GetComponent <PrefabInstantiator> ();
 	}
 
 	void Start () {
-
+		localPrefabInstantiator.enabled = true;
+		localPrefabInstantiator.getMap (map);
+		this.enabled = false;
 	}
 	
 	// Update is called once per frame
