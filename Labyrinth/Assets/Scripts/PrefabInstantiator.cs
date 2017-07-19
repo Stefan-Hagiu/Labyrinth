@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PrefabInstantiator : MonoBehaviour {
-
+	// Unity considers the X axis to the right and the Y axis up
 	public GameObject cell;
 	public GameObject canvas;
 	GameObject newCell;
@@ -31,7 +31,7 @@ public class PrefabInstantiator : MonoBehaviour {
 		}
 		for (int i = 1; i < map.Count - 1; i++) {
 			for (int j = 1; j < map [0].Count - 1; j++) {
-				newCell = Instantiate (cell, new Vector3 (50 * i, 50 * j), this.transform.rotation);
+				newCell = Instantiate (cell, new Vector3 (50 * j, -50 * i), this.transform.rotation);
 				newCell.transform.SetParent (canvas.transform, false);
 				if (map [i] [j] == SharedDataTypes.cellType.wall) {
 					newCell.GetComponent <Image> ().color = Color.blue;
