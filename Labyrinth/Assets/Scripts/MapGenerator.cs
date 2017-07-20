@@ -5,17 +5,20 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour {
 
 	const int unitialized = 0;
+	const int uninitializedStart = 3;
 	const float almostOne = (float) 0.9999999;
 	const int bigNumber = 2000000000;
 
 	int height;
 	int width;
-	const int defaultHeight = 4;
-	const int defaultWidth = 4;
+	const int defaultHeight = 10;
+	const int defaultWidth = 10;
 	public int startingX; // I consider that the X coordinate represents height and they Y coordinate represents width
 	public int startingY;
 
 	public List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > (); 
+
+	public GameObject mainCamera;
 
 	PrefabInstantiator localPrefabInstantiator;
 
@@ -36,11 +39,6 @@ public class MapGenerator : MonoBehaviour {
 		if (height == unitialized && width == unitialized) {
 			height = defaultHeight;
 			width = defaultWidth;
-		}
-
-		if (startingX == unitialized && startingY == unitialized) {
-			startingX = (int) Random.Range (1, height + almostOne);
-			startingY = (int) Random.Range (1, width + almostOne);
 		}
 
 		for (int i = 0; i <= height + 1; i++) {
@@ -106,9 +104,23 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	void findStartingSpot () {
+		if (startingX == uninitializedStart && startingY == uninitializedStart) {
+			startingX = (int)Random.Range (1, height + almostOne);
+			startingY = (int)Random.Range (1, width + almostOne);
+			while (map [startingX] [startingY] != SharedDataTypes.cellType.clear) {
+				startingX = (int)Random.Range (1, height + almostOne);
+				startingY = (int)Random.Range (1, width + almostOne);
+			}
+		}
+		mainCamera.GetComponent <CameraMovement> ().startingCellX = startingX;
+		mainCamera.GetComponent <CameraMovement> ().startingCellY = startingY;
+	}
+
 	void startGenerating () {
 		initialize ();
 		generateTree (); //The labyrinth's structure is going to be a tree
+		findStartingSpot ();
 	}
 
 	void Awake () {

@@ -11,6 +11,8 @@ public class PrefabInstantiator : MonoBehaviour {
 
 	int mapHeight, mapWidth;
 
+	public GameObject mainCamera;
+
 	List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > ();
 
 	public void getMap (object receivedMap) {
@@ -34,10 +36,14 @@ public class PrefabInstantiator : MonoBehaviour {
 				newCell = Instantiate (cell, new Vector3 (50 * j, -50 * i), this.transform.rotation);
 				newCell.transform.SetParent (canvas.transform, false);
 				if (map [i] [j] == SharedDataTypes.cellType.wall) {
-					newCell.GetComponent <Image> ().color = Color.blue;
+					newCell.GetComponent <Image> ().color = Color.black;
+				}
+				if (map [i] [j] == SharedDataTypes.cellType.clear) {
+					newCell.GetComponent <Image> ().color = Color.white;
 				}
 			}
 		}
+		mainCamera.SetActive (true);
 		this.enabled = false;
 	}
 }

@@ -87,6 +87,7 @@
 -define:UNITY_EDITOR_OSX
 -define:ENABLE_NATIVE_ARRAY_CHECKS
 -define:UNITY_TEAM_LICENSE
+'Assets/Scripts/CameraMovement.cs'
 'Assets/Scripts/MapGenerator.cs'
 'Assets/Scripts/PrefabInstantiator.cs'
 'Assets/Scripts/SharedDataTypes.cs'
