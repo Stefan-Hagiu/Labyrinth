@@ -41,7 +41,7 @@ public class CameraMovement : MonoBehaviour {
 			if (Input.GetAxis ("Zoom") > 0 && this.gameObject.GetComponent <Camera> ().orthographicSize > 32) {
 				this.gameObject.GetComponent <Camera> ().orthographicSize /= 2;
 			}
-			if (Input.GetAxis ("Zoom") < 0 && this.gameObject.GetComponent <Camera> ().orthographicSize <= 64000) {
+			if (Input.GetAxis ("Zoom") < 0 && this.gameObject.GetComponent <Camera> ().orthographicSize < 2000) {
 				this.gameObject.GetComponent <Camera> ().orthographicSize *= 2;
 			}
 		}
