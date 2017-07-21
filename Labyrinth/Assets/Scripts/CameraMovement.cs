@@ -37,25 +37,41 @@ public class CameraMovement : MonoBehaviour {
 		}
 	}
 
+	void tryMoveLeft () {
+		this.gameObject.transform.Translate (-50, 0, 0);
+		playerCell.transform.Translate (-50, 0, 0);
+	}
+
+	void tryMoveRight () {
+		this.gameObject.transform.Translate (50, 0, 0);
+		playerCell.transform.Translate (50, 0, 0);
+	}
+
+	void tryMoveUp () {
+		this.gameObject.transform.Translate (0, -50, 0);
+		playerCell.transform.Translate (0, -50, 0);
+	}
+
+	void tryMoveDown () {
+		this.gameObject.transform.Translate (0, 50, 0);
+		playerCell.transform.Translate (0, 50, 0);
+	}
+
 	void checkMovement () {
 		if (Input.GetButtonDown ("Horizontal")) {
 			if (Input.GetAxis ("Horizontal") < 0) {
-				this.gameObject.transform.Translate (-50, 0, 0);
-				playerCell.transform.Translate (-50, 0, 0);
+				tryMoveLeft ();
 			}
 			if (Input.GetAxis ("Horizontal") > 0) {
-				this.gameObject.transform.Translate (50, 0, 0);
-				playerCell.transform.Translate (50, 0, 0);
+				tryMoveRight ();
 			}
 		}
 		if (Input.GetButtonDown ("Vertical")) {
 			if (Input.GetAxis ("Vertical") < 0) {
-				this.gameObject.transform.Translate (0, -50, 0);
-				playerCell.transform.Translate (0, -50, 0);
+				tryMoveDown ();
 			}
 			if (Input.GetAxis ("Vertical") > 0) {
-				this.gameObject.transform.Translate (0, 50, 0);
-				playerCell.transform.Translate (0, 50, 0);
+				tryMoveUp ();
 			}
 		}
 	}
@@ -63,5 +79,6 @@ public class CameraMovement : MonoBehaviour {
 	void Update () {
 		checkZoom ();
 		checkMovement ();
+		Debug.Log (map [1] [1]);
 	}
 }
