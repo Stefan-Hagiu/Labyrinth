@@ -28,7 +28,7 @@ public class CameraMovement : MonoBehaviour {
 
 	void checkZoom () {
 		if (Input.GetButtonDown ("Zoom")) {
-			if (Input.GetAxis ("Zoom") > 0) {
+			if (Input.GetAxis ("Zoom") > 0 && this.gameObject.GetComponent <Camera> ().orthographicSize > 32) {
 				this.gameObject.GetComponent <Camera> ().orthographicSize /= 2;
 			}
 			if (Input.GetAxis ("Zoom") < 0) {
