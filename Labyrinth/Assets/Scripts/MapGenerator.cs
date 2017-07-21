@@ -65,6 +65,7 @@ public class MapGenerator : MonoBehaviour {
 				continue;
 			}
 
+			//I check how many clear neighbors the cell has
 			if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.clear) {
 				currentNeighbors++;
 			}
@@ -77,6 +78,7 @@ public class MapGenerator : MonoBehaviour {
 			if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == SharedDataTypes.cellType.clear) {
 				currentNeighbors++;
 			}
+			//I add all wall neighbors to pointsToBeChecked
 			if (currentNeighbors <= 1) {
 				map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second] = SharedDataTypes.cellType.clear;
 				if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.wall) {
@@ -100,17 +102,13 @@ public class MapGenerator : MonoBehaviour {
 		if (startingX == uninitializedStart && startingY == uninitializedStart) {
 			startingX = (int)Random.Range (1, height + almostOne);
 			startingY = (int)Random.Range (1, width + almostOne);
-			while (map [startingX] [startingY] != SharedDataTypes.cellType.clear) {
-				startingX = (int)Random.Range (1, height + almostOne);
-				startingY = (int)Random.Range (1, width + almostOne);
-			}
 		}
 	}
 
 	void startGenerating () {
 		initialize ();
-		generateTree (); //The labyrinth's structure is going to be a tree
 		findStartingSpot ();
+		generateTree (); //The labyrinth's structure is going to be a tree
 
 	}
 
