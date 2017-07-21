@@ -14,6 +14,12 @@ public class CameraMovement : MonoBehaviour {
 	public int startingCellPositionX;
 	public int startingCellPositionY;
 
+	public int mapHeight;
+	public int mapWidth;
+
+	public int currentCellPositionX;
+	public int currentCellPositionY;
+
 	void placeplayerCell () {
 		playerCell = Instantiate (cell);
 		playerCell.transform.Translate (50 * startingCellPositionY, -50 * startingCellPositionX, 0);
@@ -24,6 +30,10 @@ public class CameraMovement : MonoBehaviour {
 	void Start () {
 		placeplayerCell ();
 		this.gameObject.transform.Translate (50 * startingCellPositionY, -50 * startingCellPositionX, 0);
+		currentCellPositionX = startingCellPositionX;
+		currentCellPositionY = startingCellPositionY;
+		mapHeight = map.Count - 2;
+		mapWidth = map [0].Count - 2;
 	}
 
 	void checkZoom () {
@@ -38,23 +48,35 @@ public class CameraMovement : MonoBehaviour {
 	}
 
 	void tryMoveLeft () {
-		this.gameObject.transform.Translate (-50, 0, 0);
-		playerCell.transform.Translate (-50, 0, 0);
+		if (map [currentCellPositionX] [currentCellPositionY - 1] == SharedDataTypes.cellType.clear) {
+			this.gameObject.transform.Translate (-50, 0, 0);
+			playerCell.transform.Translate (-50, 0, 0);
+			currentCellPositionY--;
+		}
 	}
 
 	void tryMoveRight () {
-		this.gameObject.transform.Translate (50, 0, 0);
-		playerCell.transform.Translate (50, 0, 0);
-	}
-
-	void tryMoveUp () {
-		this.gameObject.transform.Translate (0, -50, 0);
-		playerCell.transform.Translate (0, -50, 0);
+		if (map [currentCellPositionX] [currentCellPositionY + 1] == SharedDataTypes.cellType.clear) {
+			this.gameObject.transform.Translate (50, 0, 0);
+			playerCell.transform.Translate (50, 0, 0);
+			currentCellPositionY++;
+		}
 	}
 
 	void tryMoveDown () {
-		this.gameObject.transform.Translate (0, 50, 0);
-		playerCell.transform.Translate (0, 50, 0);
+		if (map [currentCellPositionX + 1] [currentCellPositionY] == SharedDataTypes.cellType.clear) {
+			this.gameObject.transform.Translate (0, -50, 0);
+			playerCell.transform.Translate (0, -50, 0);
+			currentCellPositionX++;
+		}
+	}
+
+	void tryMoveUp () {
+		if (map [currentCellPositionX - 1] [currentCellPositionY] == SharedDataTypes.cellType.clear) {
+			this.gameObject.transform.Translate (0, 50, 0);
+			playerCell.transform.Translate (0, 50, 0);
+			currentCellPositionX--;
+		}
 	}
 
 	void checkMovement () {
@@ -79,6 +101,5 @@ public class CameraMovement : MonoBehaviour {
 	void Update () {
 		checkZoom ();
 		checkMovement ();
-		Debug.Log (map [1] [1]);
 	}
 }

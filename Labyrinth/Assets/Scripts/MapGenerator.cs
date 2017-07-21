@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour {
 
-	const int unitialized = 0;
-	const int uninitializedStart = 3;
+	const int uninitialized = 0;
 	const float almostOne = (float) 0.9999999;
 	const int bigNumber = 2000000000;
 
@@ -28,7 +27,7 @@ public class MapGenerator : MonoBehaviour {
 		height = PlayerPrefs.GetInt ("height"); 
 		width = PlayerPrefs.GetInt ("width");
 
-		if (height == unitialized && width == unitialized) {
+		if (height == uninitialized && width == uninitialized) {
 			height = defaultHeight;
 			width = defaultWidth;
 		}
@@ -99,7 +98,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void findStartingSpot () {
-		if (startingX == uninitializedStart && startingY == uninitializedStart) {
+		if (startingX == uninitialized && startingY == uninitialized) {
 			startingX = (int)Random.Range (1, height + almostOne);
 			startingY = (int)Random.Range (1, width + almostOne);
 		}
