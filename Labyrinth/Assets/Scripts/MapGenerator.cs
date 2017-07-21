@@ -10,8 +10,8 @@ public class MapGenerator : MonoBehaviour {
 
 	int height;
 	int width;
-	const int defaultHeight = 250;
-	const int defaultWidth = 250;
+	const int defaultHeight = 100;
+	const int defaultWidth = 100;
 	public int startingX; // I consider that the X coordinate represents height and they Y coordinate represents width
 	public int startingY;
 

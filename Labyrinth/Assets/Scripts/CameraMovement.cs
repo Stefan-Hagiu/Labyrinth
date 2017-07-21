@@ -23,7 +23,7 @@ public class CameraMovement : MonoBehaviour {
 	void placeplayerCell () {
 		playerCell = Instantiate (cell);
 		playerCell.transform.Translate (50 * startingCellPositionY, -50 * startingCellPositionX, 0);
-		playerCell.GetComponent<Image> ().color = Color.blue;
+		playerCell.GetComponent<Image> ().color = new Color32 (63, 47, 255, 255);
 		playerCell.transform.SetParent (canvas.transform, false);
 	}
 
