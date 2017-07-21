@@ -24,10 +24,6 @@ public class PrefabInstantiator : MonoBehaviour {
 	}
 
 	void Start () {
-		
-	}
-
-	void Update () {
 		if (map == null) {
 			return;
 		}
@@ -45,5 +41,9 @@ public class PrefabInstantiator : MonoBehaviour {
 		}
 		mainCamera.SetActive (true);
 		this.enabled = false;
+	}
+
+	void Update () {
+		
 	}
 }

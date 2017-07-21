@@ -19,17 +19,9 @@ public class MapGenerator : MonoBehaviour {
 	public List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > (); 
 
 	public GameObject mainCamera;
+	public GameObject cell;
 
 	PrefabInstantiator localPrefabInstantiator;
-
-	class pair {
-		public pair (int a, int b) {
-			first = a;
-			second = b;
-		}
-		public int first { get; set; }
-		public int second { get; set; }
-	}
 
 	void initialize () {
 
@@ -56,11 +48,11 @@ public class MapGenerator : MonoBehaviour {
 		    1) it is still in the matrix' range 
 			2) no more than 1 of its neighbors have been added; 
 		*/
-		List <pair> pointsToBeChecked = new List <pair> ();
+		List <SharedDataTypes.pair> pointsToBeChecked = new List <SharedDataTypes.pair> ();
 		int currentPointIndex;
 		int currentNeighbors;
 
-		pointsToBeChecked.Add (new pair (startingX, startingY));
+		pointsToBeChecked.Add (new SharedDataTypes.pair (startingX, startingY));
 		while (pointsToBeChecked.Count != 0) {
 			currentPointIndex = (int) Random.Range (0, (pointsToBeChecked.Count - 1) + almostOne);
 			currentNeighbors = 0;
@@ -88,16 +80,16 @@ public class MapGenerator : MonoBehaviour {
 			if (currentNeighbors <= 1) {
 				map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second] = SharedDataTypes.cellType.clear;
 				if (map [pointsToBeChecked [currentPointIndex].first - 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.wall) {
-					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first - 1, pointsToBeChecked [currentPointIndex].second));
+					pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked [currentPointIndex].first - 1, pointsToBeChecked [currentPointIndex].second));
 				}
 				if (map [pointsToBeChecked [currentPointIndex].first + 1] [pointsToBeChecked [currentPointIndex].second] == SharedDataTypes.cellType.wall) {
-					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first + 1, pointsToBeChecked [currentPointIndex].second));				
+					pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked [currentPointIndex].first + 1, pointsToBeChecked [currentPointIndex].second));				
 				}
 				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second - 1] == SharedDataTypes.cellType.wall) {
-					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second - 1));
+					pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second - 1));
 				}
 				if (map [pointsToBeChecked [currentPointIndex].first] [pointsToBeChecked [currentPointIndex].second + 1] == SharedDataTypes.cellType.wall) {
-					pointsToBeChecked.Add (new pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second + 1));
+					pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked [currentPointIndex].first, pointsToBeChecked [currentPointIndex].second + 1));
 				}
 			}
 			pointsToBeChecked.RemoveAt (currentPointIndex);
@@ -113,14 +105,13 @@ public class MapGenerator : MonoBehaviour {
 				startingY = (int)Random.Range (1, width + almostOne);
 			}
 		}
-		mainCamera.GetComponent <CameraMovement> ().startingCellX = startingX;
-		mainCamera.GetComponent <CameraMovement> ().startingCellY = startingY;
 	}
 
 	void startGenerating () {
 		initialize ();
 		generateTree (); //The labyrinth's structure is going to be a tree
 		findStartingSpot ();
+
 	}
 
 	void Awake () {
@@ -128,9 +119,15 @@ public class MapGenerator : MonoBehaviour {
 		localPrefabInstantiator = this.gameObject.GetComponent <PrefabInstantiator> ();
 	}
 
+	void sendValuesToCamera () {
+		mainCamera.GetComponent<CameraMovement> ().startingCellPositionX = startingX;
+		mainCamera.GetComponent<CameraMovement> ().startingCellPositionY = startingY;
+	}
+
 	void Start () {
 		localPrefabInstantiator.enabled = true;
 		localPrefabInstantiator.getMap (map);
+		sendValuesToCamera ();
 		this.enabled = false;
 	}
 	
