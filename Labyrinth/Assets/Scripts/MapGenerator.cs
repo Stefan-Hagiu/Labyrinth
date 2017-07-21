@@ -122,6 +122,7 @@ public class MapGenerator : MonoBehaviour {
 	void sendValuesToCamera () {
 		mainCamera.GetComponent<CameraMovement> ().startingCellPositionX = startingX;
 		mainCamera.GetComponent<CameraMovement> ().startingCellPositionY = startingY;
+		mainCamera.GetComponent<CameraMovement> ().map = map;
 	}
 
 	void Start () {
