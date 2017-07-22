@@ -12,6 +12,11 @@ public class CameraMovement : MonoBehaviour {
 	public GameObject cell;
 	public GameObject mazeGenerator;
 
+	public int inversedHorizontal = 0;
+	public int inversedVertical = 0;
+	public float drunkInterval = 5;
+	public float currentInterval = 5;
+
 	public List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > (); 
 
 	public int startingCellPositionX;
@@ -54,11 +59,23 @@ public class CameraMovement : MonoBehaviour {
 	void placeendingCell () {
 		endingCell = Instantiate (cell);
 		endingCell.transform.Translate (50 * endingCellPositionY, -50 * endingCellPositionX, 0);
-		endingCell.GetComponent<Image> ().color = Color.red;
+		if (PlayerPrefs.GetInt ("teenager") == 1) {
+			if (UnityEngine.Random.Range (1, 3) < 2) {
+				endingCell.GetComponent<Image> ().color = Color.black;
+			} else {
+				endingCell.GetComponent<Image> ().color = Color.white;
+			}
+		} else {
+			endingCell.GetComponent<Image> ().color = Color.red;
+		}
 		endingCell.transform.SetParent (canvas.transform, false);
 	}
 	void placeCamera() {
-		this.gameObject.GetComponent <Camera> ().orthographicSize = PlayerPrefs.GetInt ("cameraZoom");
+		if (PlayerPrefs.GetInt ("myopia") == 1) {
+			this.gameObject.GetComponent <Camera> ().orthographicSize = 32;
+		} else {
+			this.gameObject.GetComponent <Camera> ().orthographicSize = PlayerPrefs.GetInt ("cameraZoom");
+		}
 		this.gameObject.transform.Translate (50 * startingCellPositionY, -50 * startingCellPositionX, 0);
 		currentCameraPositionX = finalCameraPositionX = 50 * startingCellPositionY;
 		currentCameraPositionY = finalCameraPositionY = -50 * startingCellPositionX;
@@ -75,7 +92,7 @@ public class CameraMovement : MonoBehaviour {
 	}
 
 	void checkZoom () {
-		if (Input.GetButtonDown ("Zoom")) {
+		if (Input.GetButtonDown ("Zoom") && (PlayerPrefs.GetInt ("myopia") == 0)) {
 			if (Input.GetAxis ("Zoom") > 0 && this.gameObject.GetComponent <Camera> ().orthographicSize > 32) {
 				this.gameObject.GetComponent <Camera> ().orthographicSize /= 2;
 			}
@@ -116,18 +133,18 @@ public class CameraMovement : MonoBehaviour {
 
 	void checkMovement () {
 		if (Input.GetButtonDown ("Horizontal")) {
-			if (Input.GetAxis ("Horizontal") < 0) {
+			if ((Input.GetAxis ("Horizontal") < 0 && inversedHorizontal == 0) || (Input.GetAxis ("Horizontal") > 0 && inversedHorizontal == 1)) {
 				tryMoveLeft ();
 			}
-			if (Input.GetAxis ("Horizontal") > 0) {
+			if ((Input.GetAxis ("Horizontal") > 0 && inversedHorizontal == 0) || (Input.GetAxis ("Horizontal") < 0 && inversedHorizontal == 1)) {
 				tryMoveRight ();
 			}
 		}
 		if (Input.GetButtonDown ("Vertical")) {
-			if (Input.GetAxis ("Vertical") < 0) {
+			if ((Input.GetAxis ("Vertical") < 0 && inversedVertical == 0) || (Input.GetAxis ("Vertical") > 0 && inversedVertical == 1)) {
 				tryMoveDown ();
 			}
-			if (Input.GetAxis ("Vertical") > 0) {
+			if ((Input.GetAxis ("Vertical") > 0 && inversedVertical == 0) || (Input.GetAxis ("Vertical") < 0 && inversedVertical == 1)) {
 				tryMoveUp ();
 			}
 		}
@@ -171,7 +188,31 @@ public class CameraMovement : MonoBehaviour {
 		}
 	}
 
+	void invertAxis () {
+		if (Random.Range ((float)1, (float)3) > (float)2) {
+			inversedHorizontal = 0;
+		} else {
+			inversedHorizontal = 1;
+		}
+		if (Random.Range ((float)1, (float)3) > (float)2) {
+			inversedVertical = 0;
+		} else {
+			inversedVertical = 1;
+		}
+	}
+
+	void checkDrunk () {
+		if (PlayerPrefs.GetInt ("drunk") == 1) {
+			currentInterval -= Time.deltaTime;
+			if (currentInterval < 0) {
+				currentInterval = drunkInterval;
+				invertAxis ();
+			}
+		}
+	}
+
 	void Update () {
+		checkDrunk ();
 		checkZoom ();
 		checkMovement ();
 		checkFinish ();

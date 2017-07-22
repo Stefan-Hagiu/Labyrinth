@@ -32,7 +32,11 @@ public class PrefabInstantiator : MonoBehaviour {
 					newCell.GetComponent <Image> ().color = Color.black;
 				}
 				if (map [i] [j] == SharedDataTypes.cellType.clear) {
-					newCell.GetComponent <Image> ().color = Color.white;
+					if (PlayerPrefs.GetInt ("dark") == 1) {
+						newCell.GetComponent <Image> ().color = Color.black;
+					} else {
+						newCell.GetComponent <Image> ().color = Color.white;
+					}
 				}
 			}
 		}
