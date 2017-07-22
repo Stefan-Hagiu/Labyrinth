@@ -181,9 +181,4 @@ public class MapGenerator : MonoBehaviour {
 		sendValuesToCamera ();
 		this.enabled = false;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

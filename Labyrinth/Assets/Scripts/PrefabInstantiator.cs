@@ -19,18 +19,11 @@ public class PrefabInstantiator : MonoBehaviour {
 		map = receivedMap as List < List <SharedDataTypes.cellType> >;
 	}
 
-	void Awake () {
-		
-	}
-
 	void Start () {
-		if (Application.platform == RuntimePlatform.Android) {
-			TouchScreenKeyboard.Open (null);
-		}
-
 		if (map == null) {
 			return;
 		}
+		//placing cells
 		for (int i = 1; i < map.Count - 1; i++) {
 			for (int j = 1; j < map [0].Count - 1; j++) {
 				newCell = Instantiate (cell, new Vector3 (50 * j, -50 * i), this.transform.rotation);

@@ -37,7 +37,6 @@ public class CameraMovement : MonoBehaviour {
 			return b;
 		}
 	}
-
 	float max (float a, float b) {
 		if (a >b) {
 			return a;
@@ -52,15 +51,14 @@ public class CameraMovement : MonoBehaviour {
 		playerCell.GetComponent<Image> ().color = new Color32 (63, 47, 255, 255);
 		playerCell.transform.SetParent (canvas.transform, false);
 	}
-
 	void placeendingCell () {
 		endingCell = Instantiate (cell);
 		endingCell.transform.Translate (50 * endingCellPositionY, -50 * endingCellPositionX, 0);
 		endingCell.GetComponent<Image> ().color = Color.red;
 		endingCell.transform.SetParent (canvas.transform, false);
 	}
-
 	void placeCamera() {
+		this.gameObject.GetComponent <Camera> ().orthographicSize = PlayerPrefs.GetInt ("cameraZoom");
 		this.gameObject.transform.Translate (50 * startingCellPositionY, -50 * startingCellPositionX, 0);
 		currentCameraPositionX = finalCameraPositionX = 50 * startingCellPositionY;
 		currentCameraPositionY = finalCameraPositionY = -50 * startingCellPositionX;
@@ -94,7 +92,6 @@ public class CameraMovement : MonoBehaviour {
 			currentCellPositionY--;
 		}
 	}
-
 	void tryMoveRight () {
 		if (map [currentCellPositionX] [currentCellPositionY + 1] == SharedDataTypes.cellType.clear) {
 			finalCameraPositionX += 50;
@@ -102,7 +99,6 @@ public class CameraMovement : MonoBehaviour {
 			currentCellPositionY++;
 		}
 	}
-
 	void tryMoveDown () {
 		if (map [currentCellPositionX + 1] [currentCellPositionY] == SharedDataTypes.cellType.clear) {
 			finalCameraPositionY -= 50;
@@ -110,7 +106,6 @@ public class CameraMovement : MonoBehaviour {
 			currentCellPositionX++;
 		}
 	}
-
 	void tryMoveUp () {
 		if (map [currentCellPositionX - 1] [currentCellPositionY] == SharedDataTypes.cellType.clear) {
 			finalCameraPositionY += 50;
@@ -140,8 +135,7 @@ public class CameraMovement : MonoBehaviour {
 
 	void checkFinish () {
 		if (currentCellPositionX == endingCellPositionX && currentCellPositionY == endingCellPositionY) {
-			Destroy (playerCell);
-			Destroy (endingCell);
+			PlayerPrefs.SetInt ("cameraZoom", (int) this.gameObject.GetComponent <Camera> ().orthographicSize);
 			PlayerPrefs.SetInt ("startingX", currentCellPositionX);
 			PlayerPrefs.SetInt ("startingY", currentCellPositionY);
 			if (PlayerPrefs.GetInt ("levelsRemaining") == 0) {

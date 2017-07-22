@@ -10,20 +10,12 @@ public class ButtonClick : MonoBehaviour {
 	public int width;
 	public int numberOfLevels;
 
-	// Use this for initialization
-	void Start () {
-	}
-
 	public void buttonClick () {
 		PlayerPrefs.SetInt ("height", height);
 		PlayerPrefs.SetInt ("width", width);
 		PlayerPrefs.SetInt ("levelsRemaining", numberOfLevels);
+		PlayerPrefs.SetInt ("cameraZoom", 256);
 		PlayerPrefs.Save ();
 		SceneManager.LoadScene (1);
-	}
-
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }
