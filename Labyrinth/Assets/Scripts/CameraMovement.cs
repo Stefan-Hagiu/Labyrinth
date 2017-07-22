@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CameraMovement : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class CameraMovement : MonoBehaviour {
 	GameObject endingCell;
 	public GameObject canvas;
 	public GameObject cell;
+	public GameObject mazeGenerator;
 
 	public List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > (); 
 
@@ -111,8 +113,15 @@ public class CameraMovement : MonoBehaviour {
 
 	void checkFinish () {
 		if (currentCellPositionX == endingCellPositionX && currentCellPositionY == endingCellPositionY) {
-			Application.Quit ();
-			Debug.Log ("A");
+			Destroy (playerCell);
+			Destroy (endingCell);
+			PlayerPrefs.SetInt ("startingX", currentCellPositionX);
+			PlayerPrefs.SetInt ("startingY", currentCellPositionY);
+			if (PlayerPrefs.GetInt ("levelsRemaining") == 0) {
+				SceneManager.LoadScene (0);
+			} else {
+				SceneManager.LoadScene (1);
+			}
 		}
 	}
 

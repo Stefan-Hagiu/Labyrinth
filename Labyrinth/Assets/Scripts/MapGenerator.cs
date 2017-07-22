@@ -10,8 +10,10 @@ public class MapGenerator : MonoBehaviour {
 
 	int height;
 	int width;
-	const int defaultHeight = 100;
-	const int defaultWidth = 100;
+	int numberOfLevels;
+
+	const int defaultHeight = 10;
+	const int defaultWidth = 10;
 	public int startingX; // I consider that the X coordinate represents height and they Y coordinate represents width
 	public int startingY;
 	public int endingX;
@@ -25,15 +27,24 @@ public class MapGenerator : MonoBehaviour {
 	PrefabInstantiator localPrefabInstantiator;
 
 	void initialize () {
-
 		height = PlayerPrefs.GetInt ("height"); 
 		width = PlayerPrefs.GetInt ("width");
+		startingX = PlayerPrefs.GetInt ("startingX");
+		startingY = PlayerPrefs.GetInt ("startingY");
+		if (startingX > height || startingY > width) {
+			startingX = 0;
+			startingY = 0;
+		}
+		numberOfLevels = PlayerPrefs.GetInt ("levelsRemaining");
+		PlayerPrefs.SetInt ("levelsRemaining", numberOfLevels - 1);
+		Debug.Log (numberOfLevels);
 
 		if (height == uninitialized && width == uninitialized) {
 			height = defaultHeight;
 			width = defaultWidth;
 		}
 
+		map.Clear ();
 		for (int i = 0; i <= height + 1; i++) {
 			map.Add (new List <SharedDataTypes.cellType> ());
 			for (int j = 0; j <= width + 1; j++) {
@@ -143,7 +154,7 @@ public class MapGenerator : MonoBehaviour {
 		endingY = pointsToBeChecked [pointsToBeChecked.Count - 1].second;
 	}
 
-	void startGenerating () {
+	public void startGenerating () {
 		initialize ();
 		findStartingSpot ();
 		generateTree (); //The labyrinth's structure is going to be a tree

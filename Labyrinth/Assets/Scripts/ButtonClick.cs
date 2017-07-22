@@ -8,6 +8,7 @@ public class ButtonClick : MonoBehaviour {
 
 	public int height;
 	public int width;
+	public int numberOfLevels;
 
 	// Use this for initialization
 	void Start () {
@@ -16,7 +17,8 @@ public class ButtonClick : MonoBehaviour {
 	public void buttonClick () {
 		PlayerPrefs.SetInt ("height", height);
 		PlayerPrefs.SetInt ("width", width);
-		Debug.Log ("aaaa");
+		PlayerPrefs.SetInt ("levelsRemaining", numberOfLevels);
+		PlayerPrefs.Save ();
 		SceneManager.LoadScene (1);
 	}
 

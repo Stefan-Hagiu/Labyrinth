@@ -24,6 +24,10 @@ public class PrefabInstantiator : MonoBehaviour {
 	}
 
 	void Start () {
+		if (Application.platform == RuntimePlatform.Android) {
+			TouchScreenKeyboard.Open (null);
+		}
+
 		if (map == null) {
 			return;
 		}
