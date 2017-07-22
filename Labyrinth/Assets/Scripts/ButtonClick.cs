@@ -15,6 +15,8 @@ public class ButtonClick : MonoBehaviour {
 		PlayerPrefs.SetInt ("width", width);
 		PlayerPrefs.SetInt ("levelsRemaining", numberOfLevels);
 		PlayerPrefs.SetInt ("cameraZoom", 256);
+		PlayerPrefs.SetInt ("startingX", 0);
+		PlayerPrefs.SetInt ("startingY", 0);
 		PlayerPrefs.Save ();
 		SceneManager.LoadScene (1);
 	}

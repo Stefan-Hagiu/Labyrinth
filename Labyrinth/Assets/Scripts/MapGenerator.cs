@@ -26,7 +26,7 @@ public class MapGenerator : MonoBehaviour {
 
 	PrefabInstantiator localPrefabInstantiator;
 
-	void initialize () {
+	void readData () {
 		height = PlayerPrefs.GetInt ("height"); 
 		width = PlayerPrefs.GetInt ("width");
 		startingX = PlayerPrefs.GetInt ("startingX");
@@ -37,14 +37,16 @@ public class MapGenerator : MonoBehaviour {
 		}
 		numberOfLevels = PlayerPrefs.GetInt ("levelsRemaining");
 		PlayerPrefs.SetInt ("levelsRemaining", numberOfLevels - 1);
-		Debug.Log (numberOfLevels);
+	}
+
+	void initialize () {
+		readData ();
 
 		if (height == uninitialized && width == uninitialized) {
 			height = defaultHeight;
 			width = defaultWidth;
 		}
 
-		map.Clear ();
 		for (int i = 0; i <= height + 1; i++) {
 			map.Add (new List <SharedDataTypes.cellType> ());
 			for (int j = 0; j <= width + 1; j++) {
@@ -111,7 +113,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void findStartingSpot () {
-		if (startingX == uninitialized && startingY == uninitialized) {
+		if (startingX == uninitialized || startingY == uninitialized) {
 			startingX = (int)Random.Range (1, height + almostOne);
 			startingY = (int)Random.Range (1, width + almostOne);
 		}

@@ -165,10 +165,17 @@ public class CameraMovement : MonoBehaviour {
 		}
 	}
 
+	void checkSurrender () {
+		if (Input.GetButtonDown ("Surrender")) {
+			SceneManager.LoadScene (0);
+		}
+	}
+
 	void Update () {
 		checkZoom ();
 		checkMovement ();
 		checkFinish ();
+		checkSurrender ();
 		animateCamera ();
 	}
 }
