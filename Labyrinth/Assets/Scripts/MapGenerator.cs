@@ -10,10 +10,12 @@ public class MapGenerator : MonoBehaviour {
 
 	int height;
 	int width;
-	const int defaultHeight = 100;
-	const int defaultWidth = 100;
+	const int defaultHeight = 30;
+	const int defaultWidth = 30;
 	public int startingX; // I consider that the X coordinate represents height and they Y coordinate represents width
 	public int startingY;
+	public int endingX;
+	public int endingY;
 
 	public List < List <SharedDataTypes.cellType> > map = new List < List <SharedDataTypes.cellType> > (); 
 
@@ -104,10 +106,48 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	void findEndingSpot () {
+		int i, j;
+
+		List < List <int> > lengthMap = new List < List <int> > (); 
+		for (i = 0; i <= height + 1; i++) {
+			lengthMap.Add (new List <int> ());
+			for (j = 0; j <= width + 1; j++) {
+				lengthMap [i].Add (-1);
+			}
+		}
+
+		List <SharedDataTypes.pair> pointsToBeChecked = new List <SharedDataTypes.pair> ();
+		pointsToBeChecked.Add (new SharedDataTypes.pair (startingX, startingY));
+		lengthMap [startingX] [startingY] = 1;
+		//A bfs algorithm
+		for (i = 0; i < pointsToBeChecked.Count; i++) {
+			if (lengthMap [pointsToBeChecked [i].first - 1] [pointsToBeChecked [i].second] == -1 && map [pointsToBeChecked [i].first - 1] [pointsToBeChecked [i].second] == SharedDataTypes.cellType.clear) {
+				lengthMap [pointsToBeChecked [i].first - 1] [pointsToBeChecked [i].second] = lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second] + 1;
+				pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked[i].first - 1,pointsToBeChecked[i].second));
+			}
+			if (lengthMap [pointsToBeChecked [i].first + 1] [pointsToBeChecked [i].second] == -1 && map [pointsToBeChecked [i].first + 1] [pointsToBeChecked [i].second] == SharedDataTypes.cellType.clear) {
+				lengthMap [pointsToBeChecked [i].first + 1] [pointsToBeChecked [i].second] = lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second] + 1;
+				pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked[i].first + 1,pointsToBeChecked[i].second));
+			}
+			if (lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second - 1] == -1 && map [pointsToBeChecked [i].first] [pointsToBeChecked [i].second - 1] == SharedDataTypes.cellType.clear) {
+				lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second - 1] = lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second] + 1;
+				pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked[i].first,pointsToBeChecked[i].second - 1));
+			}
+			if (lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second + 1] == -1 && map [pointsToBeChecked [i].first] [pointsToBeChecked [i].second + 1] == SharedDataTypes.cellType.clear) {
+				lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second + 1] = lengthMap [pointsToBeChecked [i].first] [pointsToBeChecked [i].second] + 1;
+				pointsToBeChecked.Add (new SharedDataTypes.pair (pointsToBeChecked[i].first,pointsToBeChecked[i].second + 1));
+			}
+		}
+		endingX = pointsToBeChecked [pointsToBeChecked.Count - 1].first;
+		endingY = pointsToBeChecked [pointsToBeChecked.Count - 1].second;
+	}
+
 	void startGenerating () {
 		initialize ();
 		findStartingSpot ();
 		generateTree (); //The labyrinth's structure is going to be a tree
+		findEndingSpot();
 
 	}
 
@@ -120,6 +160,8 @@ public class MapGenerator : MonoBehaviour {
 		mainCamera.GetComponent<CameraMovement> ().startingCellPositionX = startingX;
 		mainCamera.GetComponent<CameraMovement> ().startingCellPositionY = startingY;
 		mainCamera.GetComponent<CameraMovement> ().map = map;
+		mainCamera.GetComponent<CameraMovement> ().endingCellPositionX = endingX;
+		mainCamera.GetComponent<CameraMovement> ().endingCellPositionY = endingY;
 	}
 
 	void Start () {

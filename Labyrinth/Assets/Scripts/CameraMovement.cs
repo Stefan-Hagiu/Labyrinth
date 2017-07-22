@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class CameraMovement : MonoBehaviour {
 
 	GameObject playerCell;
+	GameObject endingCell;
 	public GameObject canvas;
 	public GameObject cell;
 
@@ -13,6 +14,8 @@ public class CameraMovement : MonoBehaviour {
 
 	public int startingCellPositionX;
 	public int startingCellPositionY;
+	public int endingCellPositionX;
+	public int endingCellPositionY;
 
 	public int mapHeight;
 	public int mapWidth;
@@ -27,8 +30,16 @@ public class CameraMovement : MonoBehaviour {
 		playerCell.transform.SetParent (canvas.transform, false);
 	}
 
+	void placeendingCell () {
+		endingCell = Instantiate (cell);
+		endingCell.transform.Translate (50 * endingCellPositionY, -50 * endingCellPositionX, 0);
+		endingCell.GetComponent<Image> ().color = Color.red;
+		endingCell.transform.SetParent (canvas.transform, false);
+	}
+
 	void Start () {
 		placeplayerCell ();
+		placeendingCell ();
 		this.gameObject.transform.Translate (50 * startingCellPositionY, -50 * startingCellPositionX, 0);
 		currentCellPositionX = startingCellPositionX;
 		currentCellPositionY = startingCellPositionY;
@@ -98,8 +109,16 @@ public class CameraMovement : MonoBehaviour {
 		}
 	}
 
+	void checkFinish () {
+		if (currentCellPositionX == endingCellPositionX && currentCellPositionY == endingCellPositionY) {
+			Application.Quit ();
+			Debug.Log ("A");
+		}
+	}
+
 	void Update () {
 		checkZoom ();
 		checkMovement ();
+		checkFinish ();
 	}
 }
